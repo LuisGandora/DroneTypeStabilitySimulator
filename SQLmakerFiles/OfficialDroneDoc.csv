@@ -1,4 +1,4 @@
 TypeofDrone, Model, Mass, VfMax, B, Wind, PowerInput, BatteryVoltage, AverageCurrent, TotalPower
 MultiRotorDrones, DJIMavic, 0.895, 8, 0.448, 12, 240, 15, 4.3, 64.5
 FixedWingDrones, WingtraOne, 0.769, 12, 1.25, 18, 240, 5, 4.05, 20.25
-NanoDrones, RyzeTello, 0.087, 8, 0.302, 11, 240, 3.8, 2.63, 4.35, 11.484
+NanoDrones, RyzeTello, 0.087, 8, 0.302, 11, 240, 3.8, 2.63, 11.484

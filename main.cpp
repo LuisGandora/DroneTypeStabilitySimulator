@@ -1,14 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include <vector>   
-#include <fstream>
+#include <vector> 
 #include <cmath>
 #include "deps/sqlite3.h"
-//temp
-#include <chrono>
-#include <thread>
 
-//delete later
 //For setting up sqlite3 if you get linker errors:
 //For Linux:
 //sudo apt update
