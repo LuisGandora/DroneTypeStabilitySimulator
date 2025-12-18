@@ -1,0 +1,10 @@
+#Ignore C++ compiled executable
+out.exe
+
+#Ignore VSCODE user settings
+.vscode/
+
+#Ignore windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
