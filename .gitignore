@@ -4,6 +4,9 @@ out.exe
 #Ignore VSCODE user settings
 .vscode/
 
+#Remove the .gitattributes file for LFS rules
+rm .gitattributes
+
 #Ignore windows system files
 Thumbs.db
 ehthumbs.db
