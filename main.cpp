@@ -171,7 +171,7 @@ int main()
     }
 
     //General simulation
-    int windSensitivity;
+    int windSpeed;
     int windIdx;
     int altitude;
     try
@@ -184,7 +184,7 @@ int main()
         {
             throw("OutofRange");
         }
-        windSensitivity = windSpeedBaeu[windIdx];
+        windSpeed = windSpeedBaeu[windIdx];
         std::cout << '\n';
         std::cout << "Altitude(int) in m: \n";
         
@@ -219,7 +219,7 @@ int main()
     int timeOfRun;
     while(powerLimit> 0)
     {
-        if(windSensitivity > dr.windSens)
+        if(windSpeed > dr.windSens)
         {
             batOut+=0.1; //incrementing damage to drone
         }
@@ -234,7 +234,32 @@ int main()
     std::cout << "Total Usage over Time (V): " << totalUsage << std::endl;
     std::cout<< "Drone Info: " << std::endl;
     dr.printInfo();
-    //end of simulation so reset if needed
+    //put in the info.txt in streaming assets
+    std::ofstream finalStream("Build/StreamingAssets/DroneInfo.txt");
+    if(finalStream.is_open())
+    {
+        finalStream << dr.type << '\n';
+        finalStream << dr.name << '\n';
+        finalStream << dr.mass << '\n';
+        finalStream << dr.maxSpeed << '\n';
+        finalStream << dr.B << '\n';
+        finalStream << dr.windSens << '\n';
+        finalStream << dr.powInp << '\n';
+        finalStream << dr.batVolt << '\n';
+        finalStream << dr.avgCur << '\n';
+        finalStream << dr.totPow << '\n';
+        finalStream << windSpeed << '\n';
+        finalStream << altitude << '\n';
+        finalStream << timeOfRun << '\n';
+        finalStream << dr.totPow * timeOfRun << '\n';
+        finalStream << totalUsage << '\n';
+
+    }
+    else
+    {
+        std::cout << "Wasnt able to read file" << std::endl;
+        return 1;
+    }
 
 
     
