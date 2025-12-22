@@ -2,20 +2,47 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="description" content="DroneSimulation"/>
         <title>Drone Simulation</title>
-        <style>
-            body{ font-family: sans-serif; text-align: center; margin-top: 50px;}
-            #quote-display{
-                font-size: 1.5em;
-                margin: 20px;
-                padding: 20px;
-                border: 1px;
-                min-height:50px;
-            }
-        </style>
+        <link rel="stylesheet" href = "style.css">
+        <script  src = "app.js" defer></script>
     </head>
     <body>
         <h1>Drone Simulation</h1>
-        <script src = "app.js"></script>
+        <div class="dropdown">
+            <button class="dropbtn">Select Drone Name</button>
+            <div class="dropdown-content">
+                <button class="selectName" id="NameOne">DJIMavic</button>
+                <button class="selectName" id="NameTwo"> WingtraOne</button>
+                <button class="selectName" id="NameThree">RyzeTello</button>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Select Wind Speed 'Beaufort scale'</button>
+            <div class="dropdown-content">
+                <button class="selectWind" id="0">Calm (1km/h)</button>
+                <button class="selectWind" id="1">Light Air (3km/h)</button>
+                <button class="selectWind" id="2">Light breeze (11km/h)</button>
+                <button class="selectWind" id="3">Gentle breeze (19km/h)</button>
+                <button class="selectWind" id="4">Moderate breeze (28km/h)</button>
+                <button class="selectWind" id="5">Fresh breeze (38km/h)</button>
+                <button class="selectWind" id="6">Strong Breeze (49km/h)</button>
+                <button class="selectWind" id="7">Moderate gale (61km/h)</button>
+                <button class="selectWind" id="8">Gale (74km/h)</button>
+                <button class="selectWind" id="9">Strong gale (88km/h)</button>
+                <button class="selectWind" id="10">Storm (102km/h)</button>
+                <button class="selectWind" id="11">Violent storm (117km/h)</button>
+                <button class="selectWind" id="12">Hurricane-force (118km/h)</button>
+            </div>
+        </div>
+        <label for="Altitude">Altitude (in m): </label>
+        <input type="number" id = "Altitude" name="AltitudeInput" min = "1" max = "9999">
+        <div class = "center-sim">
+            <button class="sim-button" id="SimulationRunner">Run Simulation</button>
+
+            <div id="unity-container" class="iframe-container"></div>
+        </div>
+        
     </body>
 </html>

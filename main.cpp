@@ -111,42 +111,15 @@ std::string sqlParser(std::string mesg, DroneHolder& drone)
     return "";
 }
 
-
-int main()
+//only recieve first as drone name, second as wind speed idx and third as altitude
+int main(int argc, char* argv[])
 {
-    //ONLY 3 Options for Now
-    std::vector<std::string> temp = {"DJIMavic", "WingtraOne", "RyzeTello"};
+    //ONLY 3 Options for Now = {"DJIMavic", "WingtraOne", "RyzeTello"}
+    std::string droneModel = argv[1];
 
 
-    //Parsing for User info
-    std::cout << "Choose your Drone Model by ONLY typing in the number\n1-DJIMavic\n2-WingtraOne\n3-RyzeTello\nYourChoice: ";
-    std::string choice;
-    std::cin >> choice;
-    int idx;
-    try
-    {
-        idx = stoi(choice)-1;
-        if(idx > 2 || idx < 0)
-        {
-            throw("Out of Range");
-        }
-    }
-    catch(const char* msg)
-    {
-        std::cerr << msg << '\n';
-        return 1;
-    }
-    catch(const std::out_of_range& e)
-    {
-        std::cerr << "Didnt input a valid number possibly" << '\n';
-        return 1;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << "Something Unexpected happen, look at code or logs" << '\n';
-        return 1;
-    }
-    std::string stmtMesg = "SELECT * FROM Drones WHERE Model = '" + temp[idx] +"';";
+    
+    std::string stmtMesg = "SELECT * FROM Drones WHERE Model = '" + droneModel +"';";
     DroneHolder dr;
     try
     {
@@ -172,24 +145,19 @@ int main()
 
     //General simulation
     int windSpeed;
-    int windIdx;
+    
     int altitude;
     try
     {
         std::vector<int> windSpeedBaeu = {1, 3, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117, 118}; //wind speeds based off the Beaucraut scale from https://en.wikipedia.org/wiki/Beaufort_scale
-        std::cout << "Calm:0(1km/h)\nLight Air:1(3km/h)\nLight breeze:2(11km/h)\nGentle breeze:3(19km/h)\nModerate breeze:4(28km/h)\nFresh breeze:5(38km/h)\nStrong Breeze:6(49km/h)\nModerate gale:7(61km/h)\nGale:8(74km/h)\nStrong gale:9(88km/h)\nStorm:10(102km/h)\nViolent storm:11(117km/h)\nHurricane-force:12(118km/h)\nChooseChoice: ";
-        
-        std::cin >> windIdx;
+        int windIdx = std::stoi(argv[2]);
         if(windIdx > 12)
         {
             throw("OutofRange");
         }
         windSpeed = windSpeedBaeu[windIdx];
         std::cout << '\n';
-        std::cout << "Altitude(int) in m: \n";
-        
-        std::cin >> altitude;
-        std::cout << '\n';
+        altitude = std::stoi(argv[3]);
     }
     catch(const std::out_of_range& e)
     {
