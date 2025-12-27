@@ -22,7 +22,7 @@ app.get('/run-simulation', (req, res)=>{
 
     console.log(`Running C++ with : Drone=${droneIdx}, Wind=${windIdx}, Alt=${altitude}`);
 
-    exec(`./out ${droneIdx} ${windIdx} ${altitude}`, (error,stdout,stderr) =>{ //later replace with the inputs
+    exec(`out.exe ${droneIdx} ${windIdx} ${altitude}`, (error,stdout,stderr) =>{ //later replace with the inputs
         if(error)
         {
             console.error(`exec error: ${error}`);

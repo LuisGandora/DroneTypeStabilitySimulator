@@ -8,6 +8,10 @@ Simulates drone stability using **C++**
 
 ---
 
+
+![alt text](Thumbnail.png)
+
+
 The goal of this project is to create a visual drone simulator that showcases the stability of various drones. Drone data is stored in a database and accessed through multiple SQL APIs for practice and experimentation.
 
 The documentation for this project is divided into the following chapters:
@@ -273,7 +277,7 @@ Within the server.js, when it is run with 'node server.js', an express app is ma
     +--------------------------------------------------+
 
 
-The node package comes with exec, which can actually run a c++ script with CLI on a local server on a PC. However, this isnt possible to use within a locally hosted HTML website due to the fact that it doesnt have resources to allocate to C++. Thus with express, you can create a local server that could run a local c++ program (out) that can be called by a html website (However it is locally dependent on the same network however there are resources to expand this for free like backend repo).
+The node package comes with exec, which can actually run a c++ script with CLI on a local server on a PC. However, this isnt possible to use within a locally hosted HTML website due to the fact that it doesnt have resources to allocate to C++. Thus with express, you can create a local server that could run a local c++ program (out.exe) that can be called by a html website (However it is locally dependent on the same network however there are resources to expand this for free like backend repo).
 
 
     +--------------------------------------------------+
@@ -296,48 +300,58 @@ So within the HTML, assuming the info is inputted, when the run simulation butto
 
 The unity webgl package primarily serves as a visualization of the drone stability which was the whole point of "3. Front-end Visualization". It reads a file within its folders that contains the results of the HTML site, then gets the drone model (made with basic unity assets since I need to learn blender eventually) and then runs the simulation.
 
+Note: While I will not make the unity files public, I did use Unity Web requests to obtain the files written by the C++ program. Web requests essentially work as a IO file reader however works with html applications. Possible by the Application.streamingAssetsPath attribute that essentially works as a consistant storage location for files to be written to. However when the file is written to, a new page has to open because otherwise the html app will restart.
+
+
+```css
+    string finalPath = System.IO.Path.Combine(Application.streamingAssetsPath, "DroneInfo.txt");
+
+        debugHeader.GetComponent<TextMeshProUGUI>().text = "Loading: " + finalPath;
+
+        using(UnityWebRequest www = UnityWebRequest.Get(finalPath))
+        {
+            yield return www.SendWebRequest();
+
+            if(www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error reading file: " + www.error);
+                debugHeader.GetComponent<TextMeshProUGUI>().text ="Error loading from: " + finalPath;
+            }
+            else
+            {
+                string fileContent = www.downloadHandler.text;
+                ReadFile(fileContent);
+                InitializeDrone();
+            }
+        }
+```
+
 
 So in summary the simulation with full visualization follows this form:
 
 
-//finish this later
-+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | Step                          | Description                                                                                                                                                                  |
-    +===============================+==============================================================================================================================================================================+
-    | 1. User Info Gathered         | The user selects one of three drones: "DJIMavic", "WingtraOne", or "RyzeTello".                                                                                              |
-    |                               | Their valid choice is recorded and converted into an SQLite3 statement to be passed into the SQL parser.                                                                     |
-    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | 2. Environment Variables      | Wind sensitivity input is collected. The user selects a Beaufort-scale wind speed (km/h) based on:                                                                            |
-    |    Gathered                   | https://en.wikipedia.org/wiki/Beaufort_scale.                                                                                                                                |
-    |                               | The user also provides a custom altitude (meters).                                                                                                                            |
-    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | 3. Force & Torque Calculation | Using the provided altitude, the drone's force and torque are calculated mathematically.                                                                                      |
-    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | 4. Power Limit Determination  | With the DroneHolder struct, the power limit (`powInp`) is retrieved.                                                                                                         |
-    |                               | Base power usage is calculated as:                                                                                                                                            |
-    |                               |                                                                                                                                                                              |
-    |                               |      baseUse = currDroneTorque + dr.totPow                                                                                                                                    |
-    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | 5. Stability Simulation       | A loop simulates drone stability by monitoring remaining power.                                                                                                               |
-    |                               | The loop runs while the drone's power limit > 0.                                                                                                                              |
-    |                               | Every second, powerlimit is reduced by `batOut`, which defaults to `baseUse`.                                                                                                 |
-    |                               | A penalty of +0.1 is added per second to `batOut` if:                                                                                                                         |
-    |                               |                                                                                                                                                                              |
-    |                               |      (Beaufort wind >= drone wind sensitivity)                                                                                                                                |
-    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | 6. Simulation Output          | After simulation ends, the program reports:                                                                                                                                   |
-    |                               |  • Total Time (seconds)                                                                                                                                                       |
-    |                               |  • Total Energy Used (Joules), via:                                                                                                                                           |
-    |                               |                                                                                                                                                                              |
-    |                               |        totalEnergy = dr.totPow * time                                                                                                                                         |
-    |                               |  • TotalUsageOverTime (voltage)                                                                                                                                                |
-    |                               |  • All normal drone info                                                                                                                                                      |
-    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+    +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Step                              | Description                                                                                                                                  |
+    +===================================+==============================================================================================================================================+
+    | 1. Database & Dependency Setup    | Install necessary Python dependencies.                                                                                                       |
+    |                                   | Set up the `drones.db` database from the provided `drone.csv` file by running the `sqlMaker` script located in the `SQLmakerFiles` folder.   |
+    +-----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+    | 2. C++ Compilation                | In the main folder, compile the C++ source code into an executable named `out`.                                                              |
+    |                                   | Run the terminal command: `g++ -o out main.cpp -lsqlite3`. (Note: The output file must be named `out` for the system to recognize it).       |
+    +-----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+    | 3. Server Initialization          | Initialize the backend server from the main folder.                                                                                          |
+    |                                   | Run the terminal command: `node server.js` to open the server connection.                                                                    |
+    +-----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+    | 4. Client-Side Simulation         | Locally host the `index.html` file (e.g., using the Live Server extension in VSCode).                                                        |
+    |                                   | Test if the simulation operates correctly by inputting your specific test values into the interface.                                         |
+    +-----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
 
 
 Credits: Luis Blanco 11/26-12/26
 
-Also this is my first real github project? So I would really appreciate feedback or any recommendation for improvements of my project since I intend to continue pursuing software engineering. Pls follow me on linkedin too that helps: https://www.linkedin.com/in/luis369
+
+Also this is my first real github project so I would really appreciate feedback of how well I implemented my project. Pls follow me on linkedin too that helps: https://www.linkedin.com/in/luis369
 
 
 

@@ -8,7 +8,7 @@
 //For Linux:
 //sudo apt update
 //sudo apt install libsqlite3-dev
-//g++ -o out main.cpp -lsqlite3
+//g++ -o out.exe main.cpp -lsqlite3
 
 //The goat for doc of SQL tables:
 //https://www.geeksforgeeks.org/cpp/sql-using-c-c-and-sqlite/
