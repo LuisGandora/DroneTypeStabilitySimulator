@@ -92,52 +92,42 @@ Helper functions:
 Calculations from: https://www.technik-consulting.eu/en/analysis/stable_drone.html
 
 getForce()-Gets the force by taking in an altitude to calculate the acceleration for thrust force the drone needs
-	```C++ 
+
+
+```cpp
     
 double getForce(double altitude)
-
-    {
-    
-        double a = (pow(maxSpeed, 2))/(2*altitude);
-        
-        double force = mass * a + mass * 9.8;
-        
-        return force;
-        
-    }
+{
+	double a = (pow(maxSpeed, 2))/(2*altitude);
+	double force = mass * a + mass * 9.8;
+	return force;
+}
+```
     
     
 	
 getTorque()- Gets the torque by taking in a force and then returning the torque multiplied by the diagonal length (B)
     
-	```C++
-    
-		double getTorque(double force)
-        
-    {
-    
-        return force * B;
-        
-    }
+```cpp
+
+double getTorque(double force)	
+{
+	return force * B;
+}
+```
     
     
 printInfo()- Fucntion to print drone info
     
-	```C++
-    
-		void printInfo()
-        
-    {
-    
-        std::cout << "Type: " << type << " Name: " << name << " Mass: " <<  mass <<std::endl;
-        
-        std::cout << "MaxSpeed: " << maxSpeed << " B: " << B << " Wind Sensitivity: " <<  windSens <<std::endl;
-        
-        std::cout << "Power Input: " << powInp << " Battery Voltage: " << batVolt << "  Average Current: " <<  avgCur <<std::endl;
-        
-        std::cout << "Total Power: " << totPow << std::endl;
-        
-    }
+```cpp
+void printInfo()
+{
+	std::cout << "Type: " << type << " Name: " << name << " Mass: " <<  mass <<std::endl;
+	std::cout << "MaxSpeed: " << maxSpeed << " B: " << B << " Wind Sensitivity: " <<  windSens <<std::endl;
+	std::cout << "Power Input: " << powInp << " Battery Voltage: " << batVolt << "  Average Current: " <<  avgCur <<std::endl;
+	std::cout << "Total Power: " << totPow << std::endl;
+}
+```
     
     
 #2-b sqlParser
@@ -304,26 +294,26 @@ Note: While I will not make the unity files public, I did use Unity Web requests
 
 
 ```css
-    string finalPath = System.IO.Path.Combine(Application.streamingAssetsPath, "DroneInfo.txt");
+string finalPath = System.IO.Path.Combine(Application.streamingAssetsPath, "DroneInfo.txt");
 
-        debugHeader.GetComponent<TextMeshProUGUI>().text = "Loading: " + finalPath;
+debugHeader.GetComponent<TextMeshProUGUI>().text = "Loading: " + finalPath;
 
-        using(UnityWebRequest www = UnityWebRequest.Get(finalPath))
-        {
-            yield return www.SendWebRequest();
+using(UnityWebRequest www = UnityWebRequest.Get(finalPath))
+{
+	yield return www.SendWebRequest();
 
-            if(www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError("Error reading file: " + www.error);
-                debugHeader.GetComponent<TextMeshProUGUI>().text ="Error loading from: " + finalPath;
-            }
-            else
-            {
-                string fileContent = www.downloadHandler.text;
-                ReadFile(fileContent);
-                InitializeDrone();
-            }
-        }
+	if(www.result != UnityWebRequest.Result.Success)
+	{
+		Debug.LogError("Error reading file: " + www.error);
+		debugHeader.GetComponent<TextMeshProUGUI>().text ="Error loading from: " + finalPath;
+	}
+	else
+	{
+		string fileContent = www.downloadHandler.text;
+		ReadFile(fileContent);
+		InitializeDrone();
+	}
+}
 ```
 
 
