@@ -60,6 +60,9 @@ document.getElementById("SimulationRunner").addEventListener("click", ()=>
 
     console.log("Starting simulation");
     /*Execution test*/
+    //If Locally: http://localhost:3000/run-simulation?droneIdx=${droneName}&windIdx=${idx}&alt=${altitude}
+    //If on netifly for deployment: https://dronestabsimulatorbackendrepo.onrender.com/run-simulation?droneIdx=${droneName}&windIdx=${idx}&alt=${altitude}
+    //Need to do this netifly test later because it keeps on bugging, for now run locally via: node server.js
     fetch(`http://localhost:3000/run-simulation?droneIdx=${droneName}&windIdx=${idx}&alt=${altitude}`)
     .then(response => response.json())
     .then(data =>{

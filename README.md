@@ -227,6 +227,120 @@ Then after the simulation, the Total Time (s), Total Energy Used (J and calculat
     |                               |  • All normal drone info                                                                                                                                                      |
     +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
+This information before 12/20 was displayed when the program ran, but with front end components with html being added, the info would be written to a file within a unity build in 3. Front-end Visualization.
+
+# **3. Front-end Visualization**
+## **Requirements
+
+Need a out program to be generated from main.cpp with the command "g++ -o out main.cpp -lsqlite3" 'Follow instructions on how to set that up in 2. C++ Drone Simulation
+
+## **Steps for simulation run
+
+#1-Setting up the node.js express app
+
+Install node with
+
+'''
+    npm init -y
+    npm install express cors
+'''
+
+In the same folder as server.js, run node server.js
+
+#2-Running the html
+
+Select the index.html within the DroneTypeStabilitySimulator folder and visit the web page, you should be able to run the simulation and see the visual results!
+
+## **Rundown on the components of the front end
+
+First we have the html, which just holds the input elements for all the main values for the c++ backend to get (Drone name, Wind speed and Altitude), then the html passes that info to app.js 
+
+app.js will capture the drone name, wind speed and altitude as variables. Then the fetch function is called for a url that serves as the node server within server.js
+
+fetch is an interface that essentially serves to fetch resources from networks, which will work in our case specifically for server.js
+
+
+Within the server.js, when it is run with 'node server.js', an express app is made, which essentially works to handle http requests, specifcally from fetch. Express is part of the node package which also includes crucial modules to help run c++ on locally hosted html websites due to the difference in C++ and js's architecture
+
+
+     +--------------------------------------------------+
+    | Software/Networking (js essentially)             |
+    +--------------------------------------------------+
+                          |
+                          v
+    +--------------------------------------------------+
+    | Hardware level (c++)                             |
+    +--------------------------------------------------+
+
+
+The node package comes with exec, which can actually run a c++ script with CLI on a local server on a PC. However, this isnt possible to use within a locally hosted HTML website due to the fact that it doesnt have resources to allocate to C++. Thus with express, you can create a local server that could run a local c++ program (out) that can be called by a html website (However it is locally dependent on the same network however there are resources to expand this for free like backend repo).
+
+
+    +--------------------------------------------------+
+    | Software/Networking (js essentially)             |
+    +--------------------------------------------------+
+                          |
+                          v
+    +--------------------------------------------------+
+    | Middleware (express->exec)                       |
+    +--------------------------------------------------+
+                          |
+                          v
+    +--------------------------------------------------+
+    | Hardware level (c++)                             |
+    +--------------------------------------------------+
+
+
+So within the HTML, assuming the info is inputted, when the run simulation button is called, app.js would fetch the url for server.js and pass the info to be run on html then the C++ would go on to write the info to the Unity webgl program files within the build.
+
+
+The unity webgl package primarily serves as a visualization of the drone stability which was the whole point of "3. Front-end Visualization". It reads a file within its folders that contains the results of the HTML site, then gets the drone model (made with basic unity assets since I need to learn blender eventually) and then runs the simulation.
+
+
+So in summary the simulation with full visualization follows this form:
+
+
+//finish this later
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Step                          | Description                                                                                                                                                                  |
+    +===============================+==============================================================================================================================================================================+
+    | 1. User Info Gathered         | The user selects one of three drones: "DJIMavic", "WingtraOne", or "RyzeTello".                                                                                              |
+    |                               | Their valid choice is recorded and converted into an SQLite3 statement to be passed into the SQL parser.                                                                     |
+    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | 2. Environment Variables      | Wind sensitivity input is collected. The user selects a Beaufort-scale wind speed (km/h) based on:                                                                            |
+    |    Gathered                   | https://en.wikipedia.org/wiki/Beaufort_scale.                                                                                                                                |
+    |                               | The user also provides a custom altitude (meters).                                                                                                                            |
+    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | 3. Force & Torque Calculation | Using the provided altitude, the drone's force and torque are calculated mathematically.                                                                                      |
+    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | 4. Power Limit Determination  | With the DroneHolder struct, the power limit (`powInp`) is retrieved.                                                                                                         |
+    |                               | Base power usage is calculated as:                                                                                                                                            |
+    |                               |                                                                                                                                                                              |
+    |                               |      baseUse = currDroneTorque + dr.totPow                                                                                                                                    |
+    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | 5. Stability Simulation       | A loop simulates drone stability by monitoring remaining power.                                                                                                               |
+    |                               | The loop runs while the drone's power limit > 0.                                                                                                                              |
+    |                               | Every second, powerlimit is reduced by `batOut`, which defaults to `baseUse`.                                                                                                 |
+    |                               | A penalty of +0.1 is added per second to `batOut` if:                                                                                                                         |
+    |                               |                                                                                                                                                                              |
+    |                               |      (Beaufort wind >= drone wind sensitivity)                                                                                                                                |
+    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | 6. Simulation Output          | After simulation ends, the program reports:                                                                                                                                   |
+    |                               |  • Total Time (seconds)                                                                                                                                                       |
+    |                               |  • Total Energy Used (Joules), via:                                                                                                                                           |
+    |                               |                                                                                                                                                                              |
+    |                               |        totalEnergy = dr.totPow * time                                                                                                                                         |
+    |                               |  • TotalUsageOverTime (voltage)                                                                                                                                                |
+    |                               |  • All normal drone info                                                                                                                                                      |
+    +-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Credits: Luis Blanco 11/26-12/26
+
+Also this is my first real github project? So I would really appreciate feedback or any recommendation for improvements of my project since I intend to continue pursuing software engineering. Pls follow me on linkedin too that helps: https://www.linkedin.com/in/luis369
+
+
+
 
 
 
