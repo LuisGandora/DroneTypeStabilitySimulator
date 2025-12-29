@@ -5,6 +5,7 @@ Simulates drone stability using **C++**
 **Date:** 12/7 — *Drone Logic Finished*  
 **Author:** Luis Andre Matudio Blanco  
 **Dependency Documentation:** SQLite3 (https://sqlite.org/docs.html)
+**Youtube Demo:** (https://youtu.be/XHTX_3leCkE)
 
 ---
 
